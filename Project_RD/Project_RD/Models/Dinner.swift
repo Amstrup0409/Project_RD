@@ -11,21 +11,23 @@ import Foundation
 class Dinner {
     var title: String
     var description: String?
-    var attendees: [User?] = [User?]()
+    var guests: [User?] = [User?]()
     var hostedBy: [User?]
     var guestCapacity: Int
     
-    init(title: String, description: String? = nil, host: User..., guestCapacity: Int) {
+    init(title: String, description: String? = nil, guestCapacity: Int, host: User...) {
         self.title = title
         self.description = description
         self.hostedBy = host
         self.guestCapacity = guestCapacity
     }
     
-    func addAttendee(_ attendee: User) -> Bool {
-        guard attendees.count < guestCapacity else { return false }
-        self.attendees.append(attendee) // TODO: Check for unique entries
+    func addGuest(_ guest: User) -> Bool {
+        guard guests.count < guestCapacity else { return false }
+        self.guests.append(guest) // TODO: Check for unique entries
         return true
     }
+    
+    func getRemainingCapacity() -> Int { guestCapacity - guests.count }
     
 }

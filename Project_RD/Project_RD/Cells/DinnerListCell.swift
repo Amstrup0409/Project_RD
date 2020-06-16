@@ -34,18 +34,43 @@ class DinnerListCell: UITableViewCell { // SnapKit usage only.
     
     private var dateLabel: UILabel = UILabel()
     
+    private var attendeesIndicators: UIStackView = UIStackView()
+    
     // MARK: Static values
     static let identifier: String = "dinnerListIdentifier"
     
     private func initializeSelf() {
         
-        self.insertAndAnchorChildren()
+        
+        insertAndAnchorChildren()
+        setupVisuals()
+        
+    }
+    
+    private func setupVisuals() {
+        containerView.layer.cornerRadius = 8
+        
+        titleLabel.font = titleLabel.font.withSize(20)
+        
+        descriptionLabel.numberOfLines = 0
+        
+        attendeesIndicators.spacing = -8
+        
+        
     }
     
     public func configureFrom(dinner: Dinner) {
         self.titleLabel.text = dinner.title
         self.descriptionLabel.text = dinner.description
         self.dateLabel.text = "16/6 - 2020" // TODO: Switch to non-static value
+        
+        AttendeeImage.produceAttendeesIndicators(for: dinner, reciever: attendeesIndicators)
+    }
+    
+    override func prepareForReuse() {
+        self.attendeesIndicators.arrangedSubviews.forEach({ view in
+            view.removeFromSuperview()
+        })
     }
 }
 
@@ -60,25 +85,36 @@ extension DinnerListCell {
         
         containerView.addSubview(dateLabel)
         
+        containerView.addSubview(attendeesIndicators)
+        
         containerView.snp.makeConstraints({ make in
             make.edges.equalToSuperview().inset(UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16))
         })
         
         titleLabel.snp.makeConstraints({ make in
-            make.top.equalToSuperview().inset(16)
+            make.top.equalToSuperview().inset(8)
             make.leading.equalToSuperview().inset(8)
-            make.trailing.equalTo(dateLabel.snp.leading).inset(8)
+            make.trailing.equalTo(dateLabel.snp.leading).inset(-8)
+            make.height.equalTo(20)
         })
         
         descriptionLabel.snp.makeConstraints({ make in
-            make.top.equalTo(titleLabel.snp.bottom).inset(16)
+            make.top.equalTo(titleLabel.snp.bottom)
             make.leading.equalToSuperview().inset(8)
             make.trailing.equalToSuperview().inset(8)
+            make.height.equalTo(60)
         })
         
         dateLabel.snp.makeConstraints({ make in
-            make.top.equalToSuperview().inset(16)
+            make.top.equalToSuperview().inset(8)
             make.trailing.equalToSuperview().inset(8)
+        })
+        
+        attendeesIndicators.snp.makeConstraints({ make in
+            make.top.equalTo(descriptionLabel.snp.bottom).inset(-8)
+            make.height.equalTo(32)
+            make.leading.equalToSuperview().inset(8)
+//            make.trailing.equalToSuperview().inset(8)
         })
     }
 }

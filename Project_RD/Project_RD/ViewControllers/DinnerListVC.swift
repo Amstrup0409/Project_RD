@@ -10,13 +10,24 @@ import UIKit
 import SnapKit
 
 struct DevTestData {
+    static var loremIpsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    
+    static var userListContent: [User] = [
+        User(firstName: "Chrisser", lastName: "First"),
+        User(firstName: "Chrisser", lastName: "Second"),
+        User(firstName: "Chrisser", lastName: "Third"),
+        User(firstName: "Chrisser", lastName: "Fourth"),
+        User(firstName: "Chrisser", lastName: "Fifth"),
+        User(firstName: "Chrisser", lastName: "Sixth")
+    ]
+    
     static var dinnerListContent: [Dinner] = [
-        Dinner(title: "First test dinner", host: "Chrisser1"),
-        Dinner(title: "Second test dinner", host: "Chrisser2"),
-        Dinner(title: "Third test dinner", host: "Chrisser3"),
-        Dinner(title: "Fourth test dinner", host: "Chrisser4"),
-        Dinner(title: "Fifth test dinner", host: "Chrisser5"),
-        Dinner(title: "Sixth test dinner", host: "Chrisser6")
+        Dinner(title: "First test dinner", description: DevTestData.loremIpsum, guestCapacity: 2, host: DevTestData.userListContent[0]),
+        Dinner(title: "Second test dinner", description: DevTestData.loremIpsum, guestCapacity: 2, host: DevTestData.userListContent[1]),
+        Dinner(title: "Third test dinner", description: DevTestData.loremIpsum, guestCapacity: 3, host: DevTestData.userListContent[2]),
+        Dinner(title: "Fourth test dinner", description: DevTestData.loremIpsum, guestCapacity: 1, host: DevTestData.userListContent[3]),
+        Dinner(title: "Fifth test dinner", description: DevTestData.loremIpsum, guestCapacity: 1, host: DevTestData.userListContent[4]),
+        Dinner(title: "Sixth test dinner", description: DevTestData.loremIpsum, guestCapacity: 1, host: DevTestData.userListContent[5])
     ]
 }
 
@@ -25,11 +36,10 @@ class DinnerListVC: UIViewController { // SnapKit usage only.
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         // DinnerListVC makes no use of nib, and by extension, nor bundle.
         super.init(nibName: nil, bundle: nil)
-        
         initializeSelf()
     }
     
@@ -54,7 +64,9 @@ class DinnerListVC: UIViewController { // SnapKit usage only.
 }
 
 extension DinnerListVC: UITableViewDelegate {
-    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 160 // TODO: Switch to non-static value
+    }
 }
 
 extension DinnerListVC: UITableViewDataSource {
@@ -65,10 +77,10 @@ extension DinnerListVC: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: DinnerListCell.identifier, for: indexPath) as? DinnerListCell else { return UITableViewCell() }
         
+        cell.configureFrom(dinner: DevTestData.dinnerListContent[indexPath.row])
+        
         return cell
     }
-    
-    
 }
 
 
@@ -79,7 +91,7 @@ extension DinnerListVC {
         self.view.addSubview(self.dinnerListTable)
         
         dinnerListTable.snp.makeConstraints({ make in
-            make.edges.equalToSuperview()
+            make.edges.equalTo(self.view)
         })
     }
 }
