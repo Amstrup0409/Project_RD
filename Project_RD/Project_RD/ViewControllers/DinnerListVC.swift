@@ -23,7 +23,7 @@ struct DevTestData {
     
     static var dinnerListContent: [Dinner] = [
         Dinner(title: "First test dinner", description: DevTestData.loremIpsum, guestCapacity: 2, host: DevTestData.userListContent[0], DevTestData.userListContent[2]),
-        Dinner(title: "Second test dinner", description: DevTestData.loremIpsum, guestCapacity: 2, host: DevTestData.userListContent[1]),
+        Dinner(title: "Second test dinner", guestCapacity: 2, host: DevTestData.userListContent[1]),
         Dinner(title: "Third test dinner", description: DevTestData.loremIpsum, guestCapacity: 3, host: DevTestData.userListContent[2]),
         Dinner(title: "Fourth test dinner", description: DevTestData.loremIpsum, guestCapacity: 1, host: DevTestData.userListContent[3]),
         Dinner(title: "Fifth test dinner", description: DevTestData.loremIpsum, guestCapacity: 1, host: DevTestData.userListContent[4]),
@@ -69,8 +69,10 @@ extension DinnerListVC: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let detail = DinnerDetailController(title: "Just testing")
-        detail.present(from: self)
+        let detailViewVC = DinnerDetailController(DevTestData.dinnerListContent[indexPath.row]).prepareAndGetVC()
+//        self.present(detailViewVC, animated: true, completion: nil)
+        self.navigationController?.pushViewController(detailViewVC, animated: true)
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 }
 

@@ -97,12 +97,15 @@ class DinnerListCell: UITableViewCell { // SnapKit usage only.
             }
             return text
         }()
-        print("Host label:", self.hostsLabel.text)
 //        hostsStackView.addSubview(hostsLabel)
     }
     
     override func prepareForReuse() {
         self.attendeesIndicators.arrangedSubviews.forEach({ view in
+            view.removeFromSuperview()
+        })
+        
+        self.hostsStackView.arrangedSubviews.forEach({ view in
             view.removeFromSuperview()
         })
     }
