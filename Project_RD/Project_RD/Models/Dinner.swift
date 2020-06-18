@@ -9,7 +9,7 @@
 import Foundation
 
 class Dinner {
-    var title: String
+    let title: String
     var description: String?
     var guests: [User?] = [User?]()
     var hostedBy: [User?]
@@ -29,5 +29,12 @@ class Dinner {
     }
     
     func getRemainingCapacity() -> Int { guestCapacity - guests.count }
+}
+
+class DinnerViewModel {
+    let dinner: Dinner
     
+    init(_ dinner: Dinner) {
+        self.dinner = dinner
+    }
 }

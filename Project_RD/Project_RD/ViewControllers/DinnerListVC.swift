@@ -22,7 +22,7 @@ struct DevTestData {
     ]
     
     static var dinnerListContent: [Dinner] = [
-        Dinner(title: "First test dinner", description: DevTestData.loremIpsum, guestCapacity: 2, host: DevTestData.userListContent[0]),
+        Dinner(title: "First test dinner", description: DevTestData.loremIpsum, guestCapacity: 2, host: DevTestData.userListContent[0], DevTestData.userListContent[2]),
         Dinner(title: "Second test dinner", description: DevTestData.loremIpsum, guestCapacity: 2, host: DevTestData.userListContent[1]),
         Dinner(title: "Third test dinner", description: DevTestData.loremIpsum, guestCapacity: 3, host: DevTestData.userListContent[2]),
         Dinner(title: "Fourth test dinner", description: DevTestData.loremIpsum, guestCapacity: 1, host: DevTestData.userListContent[3]),
@@ -31,7 +31,7 @@ struct DevTestData {
     ]
 }
 
-class DinnerListVC: UIViewController { // SnapKit usage only.
+class DinnerListVC: UIViewController { // MVC and SnapKit usage only.
     // Required and unused.
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -65,7 +65,12 @@ class DinnerListVC: UIViewController { // SnapKit usage only.
 
 extension DinnerListVC: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 160 // TODO: Switch to non-static value
+        return 240 // TODO: Switch to non-static value
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let detail = DinnerDetailController(title: "Just testing")
+        detail.present(from: self)
     }
 }
 

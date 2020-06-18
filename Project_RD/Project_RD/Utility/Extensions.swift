@@ -50,3 +50,10 @@ public extension UIColor {
     return self
   }
 }
+
+extension UIEdgeInsets {    
+    init(all amount: CGFloat) {
+        self.init(top: amount, left: amount, bottom: amount, right: amount)
+    }
+    
+}

@@ -26,6 +26,8 @@ class AttendeeImage: UIView {
         
         insertAndAnchorChildren()
         
+        self.iconEdgeOffset = UIEdgeInsets(all: iconEdgeOffsetAmount)
+        
         guard let attendee = attendee else { setupVisuals(for: .Missing); return }
         if host { setupVisuals(for: .Host, withImage: attendee.getImage()) } else {
             setupVisuals(for: .Attendee, withImage: attendee.getImage())
@@ -35,17 +37,22 @@ class AttendeeImage: UIView {
     // MARK: Views/Children
     private var imageView: UIImageView = UIImageView()
     
-    static func produceAttendeesIndicators(for dinner: Dinner, reciever stackView: UIStackView) {        
+    // MARK: Internal variables
+    private let iconEdgeOffsetAmount: CGFloat = -8
+    private var iconEdgeOffset: UIEdgeInsets!
+    
+    static func produceAttendeesIndicators(for dinner: Dinner, attendeesReciever AstackView: UIStackView, hostsReciever HstackView: UIStackView) {
+        
         dinner.hostedBy.forEach({ host in
-            stackView.addArrangedSubview(AttendeeImage(attendee: host, host: true))
+            HstackView.addArrangedSubview(AttendeeImage(attendee: host, host: true))
         })
         
         dinner.guests.forEach({ user in
-            stackView.addArrangedSubview(AttendeeImage(attendee: user))
+            AstackView.addArrangedSubview(AttendeeImage(attendee: user))
         })
         
         for _ in 0...dinner.getRemainingCapacity() {
-            stackView.addArrangedSubview(AttendeeImage(attendee: nil))
+            AstackView.addArrangedSubview(AttendeeImage(attendee: nil))
         }
     }
 }
@@ -55,28 +62,31 @@ extension AttendeeImage {
         self.addSubview(imageView)
         
         imageView.snp.makeConstraints({ make in
-            make.edges.equalToSuperview().inset(4)
+            make.edges.equalToSuperview()
             make.height.equalTo(imageView.snp.width)
         })
+    }
+    
+    private func setupVisuals(for role: AttendeeRole, withImage userImage: UIImage? = nil) {
+        
+        self.clipsToBounds = true
+        self.imageView.contentMode = .scaleAspectFill
         
         self.layer.borderWidth = 2 // TODO: Switch to non-static value
         self.layer.cornerRadius = 16 // TODO: Switch to non-static value
         
-    }
-    
-    private func setupVisuals(for role: AttendeeRole, withImage userImage: UIImage? = nil) {
         switch role {
         case .Host:
-            imageView.image = userImage != nil ? userImage : UIImage(systemName: "sun.min") // TODO: Placeholder Image
+            imageView.image = userImage != nil ? userImage : UIImage(systemName: "h.circle")?.withAlignmentRectInsets(iconEdgeOffset) // TODO: Placeholder Image
             changeTintColor(to: .systemGreen)
             return
         case .Attendee:
             changeTintColor(to: .systemBlue)
-            imageView.image = userImage != nil ? userImage : UIImage(systemName: "person")
+            imageView.image = userImage != nil ? userImage : UIImage(systemName: "person")?.withAlignmentRectInsets(iconEdgeOffset)
             return
         case .Missing:
             changeTintColor()
-            imageView.image = UIImage(systemName: "questionmark")
+            imageView.image = UIImage(systemName: "plus")?.withAlignmentRectInsets(iconEdgeOffset)
             return
         }
     }
