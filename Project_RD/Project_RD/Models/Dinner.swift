@@ -8,9 +8,7 @@
 
 import Foundation
 
-
-
-class Dinner {
+class DinnerEnums {
     enum Theme: String {
         case American
         case Italian
@@ -21,14 +19,16 @@ class Dinner {
         case Pizza
         case Grill
     }
-    
+}
+
+class Dinner {
     let title: String
     var description: String?
     var guests: [User?] = [User?]()
     var hostedBy: [User?]
     var guestCapacity: Int
     
-    var theme: Theme?
+    var theme: DinnerEnums.Theme?
     
     init(title: String, description: String? = nil, guestCapacity: Int, host: User...) {
         self.title = title
@@ -47,32 +47,4 @@ class Dinner {
     }
     
     func getRemainingCapacity() -> Int { guestCapacity - guests.count }
-}
-
-class DinnerViewModel {
-    private let dinner: Dinner
-    
-    init(_ dinner: Dinner) {
-        self.dinner = dinner
-    }
-    
-    func getTitle() -> String {
-        return dinner.title
-    }
-    
-    func getDescription() -> String? {
-        return dinner.description
-    }
-    
-    func getLocalizedDateString() -> String {
-        return "PH: 01/01 - 2020" // TODO: Switch to non-static value
-    }
-    
-    func getLocalizedBudgetString() -> String {
-        return "PH: 100 - 250" // TODO: Switch to non-static value
-    }
-    
-    func getTheme() -> Dinner.Theme? {
-        return dinner.theme
-    }
 }
